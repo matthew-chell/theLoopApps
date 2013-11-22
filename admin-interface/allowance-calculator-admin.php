@@ -422,8 +422,9 @@ function remove_question($quest_id){
 			if ($value == "Null" || explode(":", $value) == "userIsYou"){
 				continue;
 			}
-			$part = explode(":",$value)[0];
-			if ($quest_id == explode("-", $part)[1]){
+			$parts = explode(":",$value);
+			$parts = explode("-", $parts[0]);
+			if ($quest_id == $parts[1]){
 				continue;
 			}
 			$data .= $value.",";
@@ -564,8 +565,9 @@ function remove_answer($quest_id, $answer_id){
 			if ($value == "Null" || explode(":", $value) == "userIsYou"){
 				continue;
 			}
-			$part = explode(":",$value)[0];
-			if ($quest_id == explode("-", $part)[1] and $answer_id == explode(":", $value)){
+			$part = explode(":",$value);
+			$parts = explode("-", $parts[0]);
+			if ($quest_id == $parts[1] and $answer_id == explode(":", $value)){
 				continue;
 			}
 			$data .= $value.",";
@@ -911,18 +913,21 @@ function clean_tree(){
 			if ($value == "Null" || explode(":", $value) == "userIsYou"){
 				continue;
 			}
-			$part = explode(":",$value)[0];
-			$quest_id = explode("-", $part)[1];
+			$parts = explode(":",$value);
+			$parts = explode("-",  $parts[0]);
+			$quest_id = $parts[1];
 			$sql = "SELECT `type` FROM `allowance_question` WHERE `id` =".$q_key[intval($quest_id)];
 			$results = $wpdb->get_results($sql);
+			$parts = explode(":", $value);
+			$part = $parts[1];
 			switch ($results[0]->type){
 				case 'dropdown': //same for both
 				case 'radiobutton':
 				case 'radiobutton_sdw':
-					$data .= "form-".$q_key[intval($quest_id)].":".$a_key[intval(explode(":", $value)[1])].",";
+					$data .= "form-".$q_key[intval($quest_id)].":".$a_key[intval($part)].",";
 					break;
 				case 'checkbox':
-					$data .= "form-".$q_key[intval($quest_id)]."-".$a_key[intval(explode(":", $value)[1])].":".$a_key[intval(explode(":", $value)[1])].",";
+					$data .= "form-".$q_key[intval($quest_id)]."-".$a_key[intval($part)].":".$a_key[intval($part)].",";
 					break;
 				case 'header': //this does not or rather should have answer to be update (it is just a label);
 					break;

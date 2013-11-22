@@ -419,23 +419,28 @@ include('functions/js_functions.php');
 				if ($value == "Null" || explode(":", $value) == "userIs"){
 					continue;
 				}
-				$part = explode(":",$value)[0];
-				$quest_id = explode("-",  $part)[1];
+				
+				$parts = explode(":",$value);
+				$parts = explode("-",  $parts[0]);
+				$quest_id = $parts[1];
 				$sql = "SELECT `type` , `pull_data`, `role` FROM `allowance_question` WHERE `id` =".$quest_id;
 				$results = $wpdb->get_results($sql);
 				if ($results[0]->pull_data or ((intval($results[0]->role)) & (1 << intval(getRole($id)))) == 0){
 					continue; //overrides stored values (they are not stored most likey but just in case);
 				}
+				$parts = explode(":", $value);
+				$part_0 = $parts[0];
+				$part_1 = $parts[1];
 				switch ($results[0]->type){
 				case 'dropdown':
-					echo "document.getElementById('".explode(":", $value)[0]."').value = ".explode(":", $value)[1].";\n";
+					echo "document.getElementById('".$part_0."').value = ".$part_1.";\n";
 					break;
 				case 'radiobutton': //same for both
 				case 'radiobutton_sdw':
-					echo "document.getElementById('".explode(":", $value)[0]."-".explode(":", $value)[1]."').checked = true;\n";
+					echo "document.getElementById('".$part_0."-".$part_1."').checked = true;\n";
 					break;
 				case 'checkbox':
-					echo "document.getElementById('".explode(":", $value)[0]."').checked = true;\n";
+					echo "document.getElementById('".$part_0."').checked = true;\n";
 					break;
 				case 'header': //just a label, no answers
 					break;
@@ -509,7 +514,10 @@ include('functions/js_functions.php');
 							$pdf->Write(5, $result->label);$pdf->LN();
 							$pdf->SetFont('Arial','',12);
 							foreach ($array_key as $key){
-								if (explode("-", $key)[0] == 'form' and explode('-', $key)[1] == $result->id){
+								$parts = explode("-", $key);
+								$part_0 = $parts[0];
+								$part_1 = $parts[1];
+								if ($part_0 == 'form' and $part_1 == $result->id){
 									$sql = "SELECT * FROM `allowance_answer` WHERE `id`=".$_POST[$key];
 									$sub_result = $wpdb->get_results($sql);
 									$sub_result = $sub_result[0];
@@ -562,7 +570,8 @@ include('functions/js_functions.php');
 				$array_key = array_keys($_POST);
 				for ($i = 0; $i < count($_POST); $i ++){
 					$key = $array_key[$i];
-					if (explode("-", $key)[0] == 'form'){
+					$parts = explode("-", $key);
+					if ($parts[0] == 'form'){
 						$data .= $key.":".$_POST[$key].",";
 					}
 				}
@@ -930,11 +939,10 @@ include('functions/js_functions.php');
 		<?php } ?>
     </div>
     </div>
-    <div id="content-right"><?php get_sidebar(''); ?></div>
+    <div id="content-right"><?php get_sidebar(''); ?></div><div class="clear"></div>
 </div>
 <!--content end-->
 <!--Popup window-->
-<?php include(TEMPLATEPATH.'/popup.php') ?>
 </div>
 <!--main end-->
 </div>
