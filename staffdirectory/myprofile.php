@@ -47,7 +47,45 @@ echo "<p />";
 	}
 ?>
 		<!-- MAIN DISPLAY -->
-		<h4 style="float:right"><a href= "?page=search" >Return to Search</a></h4>
+		
+
+		
+		
+		<p/><h4 style="float:right;color:#adafb2;"><a href= "?page=profile" >MY PROFILE</a></h4><BR>
+	<hr>
+	<div style="clear:both"></div>
+	<div id="content-left">
+		<div id="main-content">
+			<p class='orange-box'><?php	echo strtoupper ("$user->first_name $user->last_name")." | $user->role_title, $user->ministry"; ?></p> <p></p>
+			<div style='float:left'>
+			
+			
+			
+			</div>
+		</div>
+	</div>
+	<div id="content-right">   
+	<div id="sidebar">
+		<div class="sidebaritem">
+			<h1>Search for Staff</h1><BR>
+			
+			<div id='simple-search-staff'>
+				<form id='s_s_s' method="post" action=""><div class='search-box' style='border-color:#adafb2'>
+					<input class='search-input' type='textbox' name='fullname' placeholder='Search' />
+					<img onclick="document.getElementById('s_s_s').submit();" class='search-img' src='<?php bloginfo('template_url'); ?>/img/search-bw.png'>
+				</div></form>
+				<BR>
+				<p>You can search using any relevant keywords, like name, jop title, ministry, city, postal code, etc.</p>
+				<!-- BR>
+				<!-- a class='false-link'><h2>SHOW ADAVANCED SEARCH</h2></a -->
+			</div>
+			<div id='advanced-search-staff'>
+			</div>
+		</div>
+	</div>
+</div><div style='clear:both;'></div>
+		
+		<!--h4 style="float:right"><a href= "?page=search" >Return to Search</a></h4>
 		<div id="wrap" style="clear:both">
 			<div id="nameheader">
 				<h1><?php
@@ -82,18 +120,18 @@ echo "<p />";
 					echo str_replace("\\", "", $user->notes); //this displays the 'About me' section located beneath the profile pic
 				echo '</div>';
 				?>
-			</div><!--left-->
+			</div><!--left-- >
 			<div class="right">
 				<?php include "infocard.php"; ?>
 				<div style="background:transparent; clear:both">
 					<input type="button" name="updateButton" value="Update/Edit your information" style="width:300px; float:right; margin-right:150px;  margin-top:20px" onClick="$('#update').toggle('slow');"/>
 				</div>	
-			</div><!--right-->
+			</div><!--right-- >
 
-			<!-- UPDATE SECTION STARTS HERE -->
+			<!-- UPDATE SECTION STARTS HERE -- >
 			<div id="update" class="update right"  <?php if (empty($_POST)) { echo 'style="display:none"'; } ?>>
 			
-			<!-- PHONE NUMBERS -->
+			<!-- PHONE NUMBERS -- >
 			<div id="phone">
 				<hr>
 				<table><tr><th>Phone Numbers:</th></tr></table>
@@ -178,7 +216,7 @@ echo "<p />";
 				</div>
 			</div>
 			<hr/>
-			<!-- MINSISTRY INFORMATION -->
+			<!-- MINSISTRY INFORMATION -- >
 			<div id="ministry">
 				<table><tr><th>Ministry Information</th></tr></table>
 				<div id="ministryAddress">
@@ -491,5 +529,5 @@ echo "<p />";
 		</script>
 	
     </body> 
-</html>
+</html -->
 

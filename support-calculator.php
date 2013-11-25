@@ -1075,7 +1075,7 @@ When selecting an amount, consider expenses like cell phone, conferences, traini
 	</div>
 	</div>
     </div>
-    <div id="content-right"><?php get_sidebar(''); ?></div><div class="clear"></div>	
+    <div id="content-right"><?php get_sidebar(''); ?></div><div style='clear:both;'></div>
 </div>
 </div>
 <!--main end-->

@@ -1,5 +1,29 @@
 
+#main-content p.orange-box{
+	color:#ffffff;
+	background-color:#f7941d;
+	padding:12px;
+	line-height:normal;
+	margin:0;
+}
 
+#main-content h2, #main-content h3 , #main-content form , #main-content lu, #main-content h1, #content h1{
+	margin-left:0;
+}
+
+#main-content p {
+	margin:13px;
+}
+
+.person:hover{
+	background-color:#eeeeee;
+}
+
+.person{
+	padding:12px;
+}
+
+/*
 body,
 	html {
 		margin:0;
@@ -12,7 +36,7 @@ body,
 	#wrap {
 		width:910px;
 		margin:0 auto;
-		/**background:#99c;**/
+		/**background:#99c;** /
 	}
 	#nameheader {
     	padding:5px 10px;
@@ -27,7 +51,7 @@ body,
 		float:left;
 		width:300px;
 		padding:10px;
-		/**background:#E2DCC4;**/
+		/**background:#E2DCC4;** /
 	}
 	h2 {
 		margin:0 0 1em;
@@ -72,4 +96,4 @@ body,
 	div.search {
 		display:none;
     }
-
+*/

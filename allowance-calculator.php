@@ -52,7 +52,7 @@ hanging indent
 space before bullet (done)
 default you
 
-image confindat pdf (none)
+image confindat pdf (done)
 
 intersal see (remark:if hours)
 
@@ -939,7 +939,7 @@ include('functions/js_functions.php');
 		<?php } ?>
     </div>
     </div>
-    <div id="content-right"><?php get_sidebar(''); ?></div><div class="clear"></div>
+    <div id="content-right"><?php get_sidebar(''); ?></div><div style='clear:both;'></div>
 </div>
 <!--content end-->
 <!--Popup window-->

@@ -6,144 +6,164 @@
 *
 *
 */?>
-
-<p/><h4 style="float:right"><a href= "?page=profile" >My Profile</a></h4>
-<div style="clear:both">
-</div>
-<br/>
-Welcome to the Staff Directory. <p /><p/>
-
-This application replaces the booklet version of the PTC Staff Address Book.  Staff will now be able to search for other staff members in their city or region as well as look up details about other staff.  Feel free to use any parameters to begin your search.<p/> 
-
-Your personal information is all initially marked as "Private".  Please click on "My Profile" (above, right), upload a photo of yourself, update any incorrect information, and choose what you would like to share with other staff.<p/>
-
-We hope you enjoy using this new tool!<p/>
-<form action="" method="post">
-<input type='textbox' name='fullname' />
-<input type='submit' name='report' value='Search' />
-</form>
-<?php
-		$fullname = "";
-		if (isset($_POST['fullname'])) {
-			$fullname = $_POST['fullname'] ; //the entire thing that was searched for
-		} 
-		$names = preg_split("/[\s,]+/", $fullname);  // split the phrase by any number of commas or space characters,
-		if(! empty($_POST['fullname'])){ //if user searched something, it'll live in post
-			//this is where my intelligent search kicks in. here we try to identify some input
-			//check if ministry
-			$j=0;
-			for($i=0; $i < count($names); $i++){ //for each term searched
-				$ministry = ministry($names[$i]);
-				if($ministry != false){
-					$names[$i] = $ministry;
+<p/><h4 style="float:right;color:#adafb2;"><a href= "?page=profile" >MY PROFILE</a></h4><BR>
+<hr>
+<div style="clear:both"></div>
+<div id="content-left">
+	<div id="main-content">
+		<?php
+				$fullname = "";
+				if (isset($_POST['fullname'])) {
+					$fullname = $_POST['fullname'] ; //the entire thing that was searched for
+					echo "<p class='orange-box'>SEARCH RESULTS FOR: \"".strtoupper($fullname)."\"</p> <p /><p/>";
 				}
-			}
-			//check if province/territory
-			$j=0;
-			for($i=0; $i < count($names); $i++){ //for erach term searched
-				$province = province($names[$i]);
-				if($province != false){
-					$names[$i] = $province;
+				else { //display welcome message if nothing being search for
+					?><p class='orange-box'>WELCOME TO THE STAFF DIRECTORY!</p> <p /><p/>
+
+		This application replaces the booklet version of the PTC Staff Address Book.  Staff will now be able to search for other staff members in their city or region as well as look up details about other staff.  Feel free to use any parameters to begin your search.<p/> 
+
+		Your personal information is all initially marked as "Private".  Please click on "My Profile" (above, right), upload a photo of yourself, update any incorrect information, and choose what you would like to share with other staff.<p/>
+
+		We hope you enjoy using this new tool!<p/><?php
 				}
-			}
-			//end of identification
-			$j = 0; //next spot in array
-			$alldata = array();
-			//I apologise for the following code. I have to build my database query. This was not simple.
-			//My recommendation for changing this is to echo a concatanation of all the query parts in order to see what it does
-			
-			//this section of the code concatenate all of the shared information in the database into one easy to search column.
-			$concatquery = "
+				$names = preg_split("/[\s,]+/", $fullname);  // split the phrase by any number of commas or space characters,
+				if(! empty($_POST['fullname'])){ //if user searched something, it'll live in post
+					//this is where my intelligent search kicks in. here we try to identify some input
+					//check if ministry
+					$j=0;
+					for($i=0; $i < count($names); $i++){ //for each term searched
+						$ministry = ministry($names[$i]);
+						if($ministry != false){
+							$names[$i] = $ministry;
+						}
+					}
+					//check if province/territory
+					$j=0;
+					for($i=0; $i < count($names); $i++){ //for erach term searched
+						$province = province($names[$i]);
+						if($province != false){
+							$names[$i] = $province;
+						}
+					}
+					//end of identification
+					$j = 0; //next spot in array
+					$alldata = array();
+					//I apologise for the following code. I have to build my database query. This was not simple.
+					//My recommendation for changing this is to echo a concatanation of all the query parts in order to see what it does
+					
+					//this section of the code concatenate all of the shared information in the database into one easy to search column.
+					$concatquery = "
+						
+							CONCAT_WS(' ',
+								IFNULL(first_name, ''), IFNULL(last_name, ''), IFNULL(ministry, ''), IFNULL(role_title, ''), IFNULL(region, ''), 
+								IFNULL(ministry_address_line1, ''), IFNULL(ministry_address_line2, ''), IFNULL(ministry_address_line3, ''),
+								IFNULL(ministry_city, ''), IFNULL(ministry_province, ''), IFNULL(ministry_country, ''), IFNULL(ministry_postal_code, ''),
+								IFNULL(website, ''), IFNULL(twitter_handle, ''), IFNULL(skype, ''), IFNULL(ministry_website, ''), 
+								IFNULL(ministry_twitter_handle, ''), IFNULL(ministry_skype, ''),
+								IF( share_photo =1, IFNULL(photo, ''),  ' ' ) ,
+								IF( share_address ='None', ' ', 
+													CONCAT(
+														IFNULL(province, '') ,
+														IF( share_address ='PROVONLY', ' ', 
+																		CONCAT(
+																			IFNULL(city, ''),
+																			IF( share_address ='CITY&PROV', ' ',
+																							CONCAT(
+																							IFNULL(address_line1,''),
+																							IFNULL(address_line2,''),
+																							IFNULL(address_line3,''),
+																							IFNULL(postal_code,''))
+																			)
+																		)
+														)
+													)
+								)
+							) 
+					";
+					
+					
+					$queryPart1 = " SELECT *,  ";
+					$queryPart2 = "";
+					$queryPart4 = "";
+					$first=true;			  
+					for($i=0; $i < count($names); $i++){
+						if(!$first){
+							$queryPart2 = $queryPart2 . "+ ";
+							$queryPart4 = $queryPart4 . " OR ";
+						}
+						else{
+							$queryPart4 = $queryPart4 . "WHERE ";
+							$first=false;
+						}
+						$queryPart2 = $queryPart2 . "(CASE WHEN " . $concatquery . " LIKE '%%%s%%' THEN 1 ELSE 0 END)  ";
+						$queryPart4 = $queryPart4 . $concatquery . " LIKE '%%%s%%' ";
+					}
+					$queryPart3 = " AS relevance FROM employee ";
+					$queryPart5 = " ORDER BY relevance DESC ";
+					//echo $queryPart1 . $queryPart2 . $queryPart3. $queryPart4 . $queryPart5 ;
+					$results = $wpdb-> get_results($wpdb->prepare($queryPart1 . $queryPart2 . $queryPart3. $queryPart4 . $queryPart5  , Search::twice($names)));
+
+					foreach($results as $result){ //populate this array with data from query
+						$data = objectToArray($result);
+						$alldata[$j]['user_login'] = $data['user_login']; //we don't publish this
+						$alldata[$j]['photo'] = $data['photo'];
+						$alldata[$j]['first_name'] = $data['first_name'];
+						$alldata[$j]['last_name']  = $data['last_name'];
+						$alldata[$j]['role_title'] = $data['role_title'];
+						$alldata[$j]['ministry'] = $data['ministry'];
+						$alldata[$j]['share_photo'] = $data['share_photo'];
+						$j++;
+					}	
+				}
 				
-					CONCAT_WS(' ',
-						IFNULL(first_name, ''), IFNULL(last_name, ''), IFNULL(ministry, ''), IFNULL(role_title, ''), IFNULL(region, ''), 
-						IFNULL(ministry_address_line1, ''), IFNULL(ministry_address_line2, ''), IFNULL(ministry_address_line3, ''),
-						IFNULL(ministry_city, ''), IFNULL(ministry_province, ''), IFNULL(ministry_country, ''), IFNULL(ministry_postal_code, ''),
-						IFNULL(website, ''), IFNULL(twitter_handle, ''), IFNULL(skype, ''), IFNULL(ministry_website, ''), 
-						IFNULL(ministry_twitter_handle, ''), IFNULL(ministry_skype, ''),
-						IF( share_photo =1, IFNULL(photo, ''),  ' ' ) ,
-						IF( share_address ='None', ' ', 
-											CONCAT(
-												IFNULL(province, '') ,
-												IF( share_address ='PROVONLY', ' ', 
-																CONCAT(
-																	IFNULL(city, ''),
-																	IF( share_address ='CITY&PROV', ' ',
-																					CONCAT(
-																					IFNULL(address_line1,''),
-																					IFNULL(address_line2,''),
-																					IFNULL(address_line3,''),
-																					IFNULL(postal_code,''))
-																	)
-																)
-												)
-											)
-						)
-					) 
-			";
-			
-			
-			$queryPart1 = " SELECT *,  ";
-			$queryPart2 = "";
-			$queryPart4 = "";
-			$first=true;			  
-			for($i=0; $i < count($names); $i++){
-				if(!$first){
-					$queryPart2 = $queryPart2 . "+ ";
-					$queryPart4 = $queryPart4 . " OR ";
-				}
-				else{
-					$queryPart4 = $queryPart4 . "WHERE ";
-					$first=false;
-				}
-				$queryPart2 = $queryPart2 . "(CASE WHEN " . $concatquery . " LIKE '%%%s%%' THEN 1 ELSE 0 END)  ";
-				$queryPart4 = $queryPart4 . $concatquery . " LIKE '%%%s%%' ";
-			}
-			$queryPart3 = " AS relevance FROM employee ";
-			$queryPart5 = " ORDER BY relevance DESC ";
-			//echo $queryPart1 . $queryPart2 . $queryPart3. $queryPart4 . $queryPart5 ;
-			$results = $wpdb-> get_results($wpdb->prepare($queryPart1 . $queryPart2 . $queryPart3. $queryPart4 . $queryPart5  , Search::twice($names)));
-
-			foreach($results as $result){ //populate this array with data from query
-				$data = objectToArray($result);
-				$alldata[$j]['user_login'] = $data['user_login']; //we don't publish this
-				$alldata[$j]['photo'] = $data['photo'];
-				$alldata[$j]['first_name'] = $data['first_name'];
-				$alldata[$j]['last_name']  = $data['last_name'];
-				$alldata[$j]['role_title'] = $data['role_title'];
-				$alldata[$j]['ministry'] = $data['ministry'];
-				$alldata[$j]['share_photo'] = $data['share_photo'];
-				$j++;
-			}	
-		}
-		if(! empty($alldata)){ //put the data into a nice table
-			// Obtain a list of columns
-			
-			echo '<table>';
-			echo '<tr>';
-				echo '<th>Photo</th>';
-				echo '<th>Name</th>';
-				echo '<th>Role</th>';
-				echo '<th>Ministry</th>';
-			echo '</tr>';
-			
-			for($i = 0; $i < count($alldata); $i++){
-				echo '<tr>';
-					if(is_null($alldata[$i]['photo']) || $alldata[$i]['share_photo'] == 0){ //if we have a picture for this user
-						//echo $alldata[$i]['share_photo'];
-						echo '<td><center><img src="../wp-content/uploads/staff_photos/anonymous.jpg" width=50 /></center></td>';
+				
+				if(! empty($alldata)){ //put the data into a nice table
+					// Obtain a list of columns
+					
+					for($i = 0; $i < count($alldata); $i++){
+						echo "<div class='person'>";
+							if(is_null($alldata[$i]['photo']) || $alldata[$i]['share_photo'] == 0){ //if we do not have a picture for this user
+								//echo $alldata[$i]['share_photo'];
+								echo '<img style=\'display:inline;float:left;\' src="../../wp-content/uploads/staff_photos/anonymous.jpg" width=50 />';
+							}
+							else { //if we do have a picture for this user
+								echo '<a style=\'display:inline;float:left;\' href ="?page=profile&person=' . $alldata[$i]['user_login'] . '"><img src="../../wp-content/uploads/staff_photos/' . $alldata[$i]['photo'] . '" width=50 /></a>';
+							}
+							echo "<div style='display:inline;float:left;margin:5px 13px;'>";
+								echo '<a style="line-height:20px;" href ="?page=profile&person=' . $alldata[$i]['user_login'] . '">' . strtoupper ($alldata[$i]['first_name'] . ' ' . $alldata[$i]['last_name']) . '</a><BR>';
+								echo  $alldata[$i]['role_title'].", " ;
+								echo $alldata[$i]['ministry'] ;
+							echo "</div><div style='clear:both'></div>";
+							
+						echo "</div>";
+						echo "<hr style='border-color:#d6d7d4;margin:0;height:0;'>";
 					}
-					else { //if we don't have a picture for this user
-						echo '<td><a href ="?page=profile&person=' . $alldata[$i]['user_login'] . '"><center><img src="../wp-content/uploads/staff_photos/' . $alldata[$i]['photo'] . '" width=50 /></center></a></td>';
-					}
-					echo '<td><a href ="?page=profile&person=' . $alldata[$i]['user_login'] . '">' . $alldata[$i]['first_name'] . ' ' . $alldata[$i]['last_name'] . '</a></td>';
-					echo '<td>' . $alldata[$i]['role_title'] . '</td>';
-					echo '<td>' . $alldata[$i]['ministry'] . '</td>';
-				echo '</tr>';
-			}
-			echo '</table>';
-		}
+				}
 
+		?>
+	</div>
+</div>
+<div id="content-right">   
+	<div id="sidebar">
+		<div class="sidebaritem">
+			<h1>Search for Staff</h1><BR>
+			
+			<div id='simple-search-staff'>
+				<form id='s_s_s' method="post" action=""><div class='search-box' style='border-color:#adafb2'>
+					<input class='search-input' type='textbox' name='fullname' placeholder='Search' />
+					<img onclick="document.getElementById('s_s_s').submit();" class='search-img' src='<?php bloginfo('template_url'); ?>/img/search-bw.png'>
+				</div></form>
+				<BR>
+				<p>You can search using any relevant keywords, like name, jop title, ministry, city, postal code, etc.</p>
+				<!-- BR>
+				<!-- a class='false-link'><h2>SHOW ADAVANCED SEARCH</h2></a -->
+			</div>
+			<div id='advanced-search-staff'>
+			</div>
+		</div>
+	</div>
+</div><div style='clear:both;'></div>
+<?php
 	function objectToArray($d) {
 		if (is_object($d)) {
 			// Gets the properties of the given object
