@@ -641,7 +641,6 @@ include('functions/js_functions.php');
 				}
 			
 				var BLURBS = {whichWay: '<?php echo changeNL(getStringConstant("blurb_0")) ?>',
-						enterAll: '<?php echo changeNL(getStringConstant("blurb_1")) ?>', 
 						result: '<?php echo changeNL(getStringConstant("blurb_2"))?>'};
 						
 			
@@ -976,7 +975,7 @@ include('functions/js_functions.php');
 					<td class='button'><input type='button' value='Restart' onclick='reset();showSection("whichWay");'></td>
 					<td class='button'><input type='button' id='buttonSave' value='Save' onclick='saveUserValues();'></td>
 					<td class='button'><input type='button' value='Download' onclick='download();'></td>
-					<td class='button'><input type='button' value='Back' onclick='backTo("enterAll");'></td>
+					<td class='button'><input type='button' value='Back' onclick='backTo("whichWay");'></td>
 				</tr></table>
 			</div>
 		<?php } ?>
