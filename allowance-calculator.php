@@ -7,6 +7,13 @@ include('functions/functions.php');
 *
 *todo description
 
+req:
+	tables-allowance-questiom/answser
+		  -support constant
+		  -string constant?
+	
+	ueses wordpress users_meta
+
 
 
 
@@ -33,7 +40,7 @@ todo test calculations (done in brief)
 
 -save (done), print (done)
 
-//second feedback
+//second feedback!!!!!!!!!!!!!!!!!
 
 -back button (done)
 -defualt 100 (done)(tested)
@@ -44,7 +51,7 @@ todo test calculations (done in brief)
 -todo hide first header (done)
 
 
-//third feedback
+//third feedback!!!!!!!!!!!!!!
 annal monthly (done)
 --role type (done))
 
@@ -55,6 +62,12 @@ default you
 image confindat pdf (done)
 
 intersal see (remark:if hours)
+
+
+FIX_ME
+calculate button not there (?)
+pdf pic (test)
+dump
 
 *
 */
@@ -116,7 +129,7 @@ include('functions/js_functions.php');
 	<div id="main-content">
 		<h1 class="replace" style="float:left"><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h1>
 		<BR><BR>
-		<script src="http://code.jquery.com/jquery-latest.js"></script>
+		<script src="https://code.jquery.com/jquery-latest.js"></script>
 		<style type="text/css">
 			td {
 				text-align:left;
@@ -219,7 +232,6 @@ include('functions/js_functions.php');
 		}
 		
 		function getMaxPoints(){
-			//intval
 			global $wpdb, $allowance_constant;
 			echo "new Array(";
 			$maxs = array(0,0,0,0);
@@ -362,7 +374,10 @@ include('functions/js_functions.php');
 		}
 		
 		function getAccess($id){
-			global $allowance_constant;
+			global $allowance_constant, $current_user;
+			if (isAdmin() && $id == $current_user->id){
+				return $allowance_constant['partAccess'];
+			}
 			$involvment_type = getFieldEmployee("involvement_type", $id);
 			if (in_array($involvment_type, $allowance_constant['noAccess_involvementType'])){
 				return $allowance_constant['noAccess'];
@@ -459,7 +474,7 @@ include('functions/js_functions.php');
 			if (isset($_POST['print']) and $_POST['print'] == 'true'){
 				$pdf = new FPDF();
 				$pdf->AddPage();
-				$pdf->Image(get_template_directory().'\res\footer-logo.png'); //todo change
+				$pdf->Image(get_stylesheet_directory_uri(). '/res/footer-logo.png'); //todo change fix!!
 				$pdf->SETXY(60, 15);
 				$pdf->SetFont('Arial','b',16);
 				$pdf->Write(5,'Allowance Calculator');
@@ -589,7 +604,7 @@ include('functions/js_functions.php');
 			$sql = "INSERT INTO  `var_dump` (`id` ,`dump` ,`time`) VALUES (NULL ,'".mysql_real_escape_string(var_export($d, true))."', NULL)";
 			//todo var_dump($_POST);
 			//echo $sql;
-			$wpdb->get_results($sql);
+			//$wpdb->get_results($sql);
 		}
 		
 		if (getAccess($current_user->id) == $allowance_constant['noAccess']){
@@ -635,7 +650,7 @@ include('functions/js_functions.php');
 				
 					//hide all
 					document.getElementById('section_whichWay').style.display  = "none";
-					document.getElementById('section_enterAll').style.display  = "none";
+					//document.getElementById('section_enterAll').style.display  = "none";
 					document.getElementById('section_result').style.display  = "none";
 					//show the one
 					document.getElementById('section_' + section).style.display = "block";
@@ -681,9 +696,9 @@ include('functions/js_functions.php');
 						break;
 					case FREE:
 						//show choose_role
+						document.getElementById('user_name').innerHTML = "";
 						document.getElementById('choose_role_div').style.display = "block";
 						showQuestions(-1);
-						showSection('enterAll');
 					break;
 					}
 				}
@@ -699,7 +714,6 @@ include('functions/js_functions.php');
 					document.getElementById('user_name').innerHTML = who.name;
 					showQuestions(who.role);
 					$(".hidden").hide();
-					showSection('enterAll');
 				}
 				
 				function select_role(){
@@ -854,62 +868,91 @@ include('functions/js_functions.php');
 					showSection(section);
 				}
 				
+				
+				
+				function window_load(){
+					$("input[name='whichWay']").change(function(){
+						if (document.getElementById('show_you') != null && document.getElementById('show_you').checked){
+							proceed(0);
+						}
+						if (document.getElementById('show_spouse') != null && document.getElementById('show_spouse').checked){
+							proceed(1);
+						}
+						if (document.getElementById('show_anyone') != null && document.getElementById('show_anyone').checked){
+							proceed(2);
+						}
+					});
+					
+					<?php if(getAccess($current_user->id) == $allowance_constant['fullAccess']) { ?>
+						document.getElementById('show_you').checked = true;
+						proceed(0);
+					<?php } else if (getSpouse() != -1 and getAccess(getSpouse()) == $allowance_constant['fullAccess']) { ?>
+						document.getElementById('show_spouse').checked = true;
+						proceed(1)
+					<?php } else { ?>
+						document.getElementById('show_anyone').checked = true;
+						proceed(2)
+					<?php } ?>
+				}
+				
+				
+				window.onload = window_load;
+				
 			</script>
 			<div id='blurb'><?php echo changeNL(getStringConstant("blurb_0")) ?></div>
 			<BR>
 			<div id='section_whichWay'>
 				Please select an option:<BR>
 				<?php if(getAccess($current_user->id) == $allowance_constant['fullAccess']) { ?>
-				<input type='button' value='Calculate for yourself' onclick='proceed(0);'>
+				<input type='radio' name='whichWay' id='show_you' value='0'><label for='show_yourself'>Calculate for yourself</label>
 				<?php }
 				if (getSpouse() != -1 and getAccess(getSpouse()) == $allowance_constant['fullAccess']) { // hides the option if there is no spouse ?>
-				<input type='button' value='Calculate for spouse' onclick='proceed(1);'>
+				<input type='radio' name='whichWay' id='show_spouse' value='1' ><label for='show_spouse'>Calculate for spouse</label>
 				<?php } ?>
 				<option value="2">Calculate for anyone</option>
-				<input type='button' value='Calculate for anyone' onclick='proceed(2);'>
-			</div>
-			<div id='user_name'></div>
-			<div id='section_enterAll' style='display:none;'>
-				<div id='choose_role_div'><select id="choose_role" onchange='select_role();'>
-				<?php
-					global $allowance_constant;
-				for($i = 0; $i < count($allowance_constant['roleType']); $i ++){
-					echo "<option value='".$i."'>".$allowance_constant['roleType'][$i]."</option>";
-				}?>
-				</select>
-				<input type='button' value='Select' onclick='select_role();'></div>
-				<!--  this are the extra special questions-->
-				<form name="saveUserValues_form" id="saveUserValues_form" action="" method="post">
-					<div id='questions'>
-						<BR>
-						<div id='hours'>
-							<h2><?php echo getStringConstant("first_header") ?></h2><BR>
-							<strong><?php echo getStringConstant("hour_label") ?></strong><BR>
-							<input type='text' size='5' name='hour_precentage' id='hour_precentage' value='100'><BR><BR>
+				<input type='radio' name='whichWay' id='show_anyone' value='2'><label for='show_anyone'>Calculate for anyone</label>
+				<div id='user_name'></div>
+				<div id='section_enterAll' style=' /* display:none; */'>
+					<div id='choose_role_div'><select id="choose_role" onchange='select_role();'>
+					<?php
+						global $allowance_constant;
+					for($i = 0; $i < count($allowance_constant['roleType']); $i ++){
+						echo "<option value='".$i."'>".$allowance_constant['roleType'][$i]."</option>";
+					}?>
+					</select>
+					<input type='button' value='Select' onclick='select_role();'></div>
+					<!--  this are the extra special questions-->
+					<form name="saveUserValues_form" id="saveUserValues_form" action="" method="post">
+						<div id='questions'>
+							<BR>
+							<div id='hours'>
+								<h2><?php echo getStringConstant("first_header") ?></h2><BR>
+								<strong><?php echo getStringConstant("hour_label") ?></strong><BR>
+								<input type='text' size='5' name='hour_precentage' id='hour_precentage' value='100'><BR><BR>
+							</div>
+							<div id='role_type_field'>
+								<strong>Role Type</strong><BR>
+								<input type='radio' name='extra_level' id='extra-field-7' value='7'><label for='extra-field-7'>Ministry Leader (all other types)</label><BR>
+								<input type='radio' name='extra_level' id='extra-field-8' value='8'><label for='extra-field-8'>Ministry Director</label><BR>
+								<input type='radio' name='extra_level' id='extra-field-9' value='9'><label for='extra-field-9'>Domain Leader</label><BR><BR>
+							</div>
+							<div id='role_type_corp'>
+								<strong>Role Type</strong><BR>
+								<input type='radio' name='extra_level' id='extra-corp-7' value='7'><label for='extra-corp-7'>Manager / Other Dept. Leader</label><BR>
+								<input type='radio' name='extra_level' id='extra-corp-8' value='8'><label for='extra-corp-8'>Department Director</label><BR><BR>
+							</div>
+							
+							<input type='hidden' name='userIs' id='userIs'>
+							<input type='hidden' name='print' id='print'>
+							<input type='hidden' name='minimum' id='minimum'>
+							<input type='hidden' name='maximum' id='maximum'>
+							<input type='hidden' name='minimum_month' id='minimum_month'>
+							<input type='hidden' name='maximum_month' id='maximum_month'>
+							<input type='hidden' name='role' id='role'>
+							<?php getQuestions($allowance_constant['fieldIndividual']) ?>
 						</div>
-						<div id='role_type_field'>
-							<strong>Role Type</strong><BR>
-							<input type='radio' name='extra_level' id='extra-field-7' value='7'><label for='extra-field-7'>Ministry Leader (all other types)</label><BR>
-							<input type='radio' name='extra_level' id='extra-field-8' value='8'><label for='extra-field-8'>Ministry Director</label><BR>
-							<input type='radio' name='extra_level' id='extra-field-9' value='9'><label for='extra-field-9'>Domain Leader</label><BR><BR>
-						</div>
-						<div id='role_type_corp'>
-							<strong>Role Type</strong><BR>
-							<input type='radio' name='extra_level' id='extra-corp-7' value='7'><label for='extra-corp-7'>Manager / Other Dept. Leader</label><BR>
-							<input type='radio' name='extra_level' id='extra-corp-8' value='8'><label for='extra-corp-8'>Department Director</label><BR><BR>
-						</div>
-						
-						<input type='hidden' name='userIs' id='userIs'>
-						<input type='hidden' name='print' id='print'>
-						<input type='hidden' name='minimum' id='minimum'>
-						<input type='hidden' name='maximum' id='maximum'>
-						<input type='hidden' name='minimum_month' id='minimum_month'>
-						<input type='hidden' name='maximum_month' id='maximum_month'>
-						<input type='hidden' name='role' id='role'>
-						<?php getQuestions($allowance_constant['fieldIndividual']) ?>
-					</div>
-				</form>
-				<input type='button' value='Back' onclick='reset();showSection("whichWay");'>
+					</form>
+				</div>
 			</div>
 			<div id='section_result' style='display:none;'>
 				<table>

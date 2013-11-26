@@ -135,7 +135,7 @@ function printAdminChangeInterface(){
 		<td><form name="add_admin" id="add_admin" action="" method="get">
 				<input type="text" name="input_add_admin" id="input_add_admin" />
 		</form></td>
-		<td><input type="button" value="Promote" onclick="add_admin.submit();"></td>
+		<td><input type="button" value="Make Admin" onclick="add_admin.submit();"></td>
 		</tr></table>
 		<form name="remove_admin" id="remove_admin" action="" method="get">
 				<input type="hidden" name="input_remove_admin" id="input_remove_admin" />
