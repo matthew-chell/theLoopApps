@@ -232,11 +232,6 @@ function printAdmin(){
 		document.getElementById("constants").value = data;
 		sendConstants.submit();
 	}
-	
-	function demoteUser(user){
-		document.getElementById("input_remove_admin").value = user;
-		remove_admin.submit();
-	}
 	</script>
 	';
 	}

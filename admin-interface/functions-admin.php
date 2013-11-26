@@ -127,6 +127,11 @@ function printAdminChangeInterface(){
 			button.value="Show Administrative Options";
 		}
 	}
+	
+	function demoteUser(user){
+		document.getElementById("input_remove_admin").value = user;
+		remove_admin.submit();
+	}
 	</script>
 	<input type="button" name="admin_view_button" id="admin_view_button" value="Show Administrative Options" onclick="toggle_admin();" />
 	<BR><BR>
