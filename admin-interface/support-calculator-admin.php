@@ -1,3 +1,15 @@
+<style type='text/css'>
+#admin_view td, .border{
+	border: 1px solid #808080;
+	padding: 5px;
+	margin: 3px;
+}
+
+.label{
+	width:100%;
+}
+
+</style>
 <?php
 
 include('functions-admin.php');
@@ -199,6 +211,7 @@ function printAdmin(){
 		</tr>
 	</table>
 </div>
+<BR>
 <form name="sendConstants" id="sendConstants" action="" method="get">
 	<input type="hidden" name="constants" id="constants" value="">
 </form>

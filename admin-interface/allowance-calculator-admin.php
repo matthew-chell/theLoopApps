@@ -128,14 +128,14 @@ function printAnswersDropdown($quest=null, $show_all=0){
 
 function printQuestions(){
 	global $allowance_constant, $wpdb, $points_width;
-	echo "<table>";
+	echo "<table class='border'>";
 	echo "<caption>Questions</caption>";
 			$sql = "SELECT * FROM `allowance_question` ORDER BY  `order` ASC";
 			$results = $wpdb->get_results($sql);
 			foreach ($results as $result){
 				echo "<tr class='quest_".$result->id."'><th class='title' colspan='3'>Question ID:".$result->id."</th></tr>\n";
 				if ($result->pull_data){
-					echo "<tr class='quest_".$result->id."'><td colspan='3'>This question pulls data from the database.  Deleteing the question and change the numbers of answers and changing the roles for the question have been disable.</td></tr>\n";
+					echo "<tr class='quest_".$result->id."'><td colspan='3'>This question pulls data from the database.  Deleteing the question and changing the numbers of answers and changing the roles for the question have been disable.</td></tr>\n";
 				}
 				echo "<tr class='quest_".$result->id."'><th colspan='3'><input type='text 'class='label' name='q-".$result->id."-label' value='".$result->label."'></th></tr>\n";
 				echo "<tr class='quest_".$result->id."'><td colspan='3'>".
@@ -159,6 +159,7 @@ function printQuestions(){
 						<td><input size='".$points_width."' type='text' name='a-".$sub_result->id."-points' value='".$sub_result->points."'></td></tr>\n";
 					$current = $sub_result->next;
 				}
+				echo "<tr class='quest_".$result->id."'><td colspan='3'><hr></td></tr>";
 			}
 		?>
 	<tr><td colspan='3'><input type="submit" value="Save"></td></tr>
@@ -593,8 +594,8 @@ function printAdmin(){
 	global $allowance_constant;
 	if (isAdmin()){	
 		printAdminChangeInterface();?>
-		<form action="" method="post">
-			<table>
+		<form class='border' action="" method="post">
+			<table style='width:100%'>
 			<tr><th></th><th>Recommended<BR>Minimum</th><th>Absolute<BR>Maximum</th></tr>
 			<?php echo printMinMax($allowance_constant['fieldIndividual']); ?>  
 			<tr><td><?php echo $allowance_constant['roleType'][$allowance_constant['fieldLeader']] ?><BR>Ministry Leader (all other types)</td><td><input type='text' name='m-<?php echo $allowance_constant['fieldLeader'] ?>-7-min' value='<?php echo getConstant("role_".$allowance_constant['fieldLeader']."_7_min")?>'></td><td><input type='text' name='m-<?php echo $allowance_constant['fieldLeader'] ?>-7-max' value='<?php echo getConstant("role_".$allowance_constant['fieldLeader']."_7_max")?>'></tr>
@@ -607,7 +608,7 @@ function printAdmin(){
 			<tr><td colspan='3'><input type="submit" value="Save"></td></tr>
 			</table>
 		</form>
-		<form action="" method="post">
+		<form class='border' action="" method="post">
 			Start Blurb
 			<textarea name="b-0" id="b-0" class='label' value='' rows="6" cols="35" maxlength="1000"><?php echo getStringConstant("blurb_0") ?></textarea><BR>
 			<?php /* Filling out Blurb
@@ -618,13 +619,13 @@ function printAdmin(){
 			<input type="submit" value="Save">
 		</form>
 		<BR>
-		<form action="" method="post">
+		<form class='border' action="" method="post">
 			First Header:
 			<input type='text' name="f-head" class='label' value='<?php echo getStringConstant("first_header") ?>' >
 			<input type="submit" value="Save">
 		</form>
 		<BR>
-		<form action="" method="post">
+		<form class='border' action="" method="post">
 			Number of hours question label:
 			<input type='text' name="h-label" class='label' value='<?php echo getStringConstant("hour_label") ?>' >
 			<input type="submit" value="Save">
@@ -639,6 +640,7 @@ function printAdmin(){
 			<option value="<?php echo $allowance_constant['corporateLeader'] ?>"><?php echo $allowance_constant['roleType'][$allowance_constant['corporateLeader']] ?></option>
 		</select>
 		<input type='button' value='Toggle Answers' onclick='toggleAnswers();' >
+		<BR>
 		<form action="" method="post">
 			<?php
 			printQuestions();
@@ -710,7 +712,7 @@ function printAdmin(){
 						<td><?php echo printCheckbox("e", "add_question", $allowance_constant['corporateIndividual'], false); ?></td>
 						<td><?php echo printCheckbox("e", "add_question", $allowance_constant['corporateLeader'], false); ?></td>
 					</table>
-					<table id='new_answers'>
+					<table class='border' id='new_answers'>
 					<tr><th>Answer</th><th>Points</th><th><input type='button' value='Add another answer' onclick='add_row()'></th>
 					</table>
 					<input type='submit' value='Add Question'>

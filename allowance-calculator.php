@@ -123,15 +123,20 @@ include('functions/js_functions.php');
 ?>
 <?php get_header(); ?>
 <div id="content">
+	<h1 class="replace"><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h1>
+	<hr>
     <div id="content-left">
 	<div id="main-content">
-		<h1 class="replace"><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h1>
-		<hr>
 		<script src="https://code.jquery.com/jquery-latest.js"></script>
 		<style type="text/css">
 			table {
 				border-collapse: separate;
-				border-spacing:0 10px;
+				border-spacing:10px;
+			}
+			
+			th {
+				background-color:#eeeeee;
+				padding:5px 0;
 			}
 		
 			td {
@@ -151,6 +156,10 @@ include('functions/js_functions.php');
 			#main-content h2{
 				font-size:150%;
 				margin-bottom:10px;
+			}
+			
+			#admin_view hr{
+				margin:0;
 			}
 		</style>
 		<?php 

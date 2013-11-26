@@ -11,7 +11,7 @@
 to an another report you need to:
 
 	> add another elif block at "%elif-block"
-	> if it does not use staff acount then add the report to the list at "%list"
+	> if it does not use staff account then add the report to the list at "%list"
 	> add the report to the dropdown with the id of "repchoice"
 	> add to the repchoice change function to display the right option
 	> add new option if necessary
@@ -173,13 +173,6 @@ elseif (!isset($error) && isset($_POST['REPORT']) && $_POST['REPORT'] == "StaffV
   $reportParams['ReportToMeOnly'] = (isset($_POST['reportToMe']) ? 'true' : 'false');
   $reportParams['Year'] = $_POST['vac_year'];
   $reportParams['Category'] = '3';
-  
-  
-  
-            /*    Year (give them a drop down of current year and last two as int)
-                Category (default this to 3 and hide it)
-                ReportToMeOnly (default to TRUE, but let the user select TRUE or FALSE)
-                ExecuteAsUser (if you need to use “report-svc” as the user, then pass the username here) */
 
   //Check for returned error message 
   $errorMsg = produceRSReport('/General/Staff Vacation and Wellness', $_POST['OutputFormat'], $reportParams, true, $SERVER_SQL2012);

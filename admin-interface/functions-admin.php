@@ -135,7 +135,7 @@ function printAdminChangeInterface(){
 	</script>
 	<input type="button" name="admin_view_button" id="admin_view_button" value="Show Administrative Options" onclick="toggle_admin();" />
 	<BR><BR>
-	<div name="admin_view" id="admin_view" style="display:none">
+	<div name="admin_view" id="admin_view" style="display:none;background-color:#fafafa;padding:10px;">
 		<table><tr>
 		<td>Make administrator:</td>
 		<td><form name="add_admin" id="add_admin" action="" method="get">
