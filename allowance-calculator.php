@@ -55,9 +55,9 @@ todo test calculations (done in brief)
 annal monthly (done)
 --role type (done))
 
-hanging indent
+hanging indent (done)
 space before bullet (done)
-default you
+default you (done)
 
 image confindat pdf (done)
 
@@ -65,8 +65,6 @@ intersal see (remark:if hours)
 
 
 FIX_ME
-calculate button not there (?)
-pdf pic (test)
 dump
 
 *
@@ -127,17 +125,32 @@ include('functions/js_functions.php');
 <div id="content">
     <div id="content-left">
 	<div id="main-content">
-		<h1 class="replace" style="float:left"><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h1>
-		<BR><BR>
+		<h1 class="replace"><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h1>
+		<hr>
 		<script src="https://code.jquery.com/jquery-latest.js"></script>
 		<style type="text/css">
+			table {
+				border-collapse: separate;
+				border-spacing:0 10px;
+			}
+		
 			td {
 				text-align:left;
+				vertical-align:middle;
 			}
 			.button {
 				width:auto;
 				border:0;
 				background-color:rgba(0,0,0,0);
+			}
+			
+			#main-content h2, #main-content h3 , #main-content form , #main-content lu, #main-content h1, #content h1{
+				margin-left:0;
+			}
+			
+			#main-content h2{
+				font-size:150%;
+				margin-bottom:10px;
 			}
 		</style>
 		<?php 
@@ -187,7 +200,7 @@ include('functions/js_functions.php');
 						echo "<option value='".$sub_result->id."'>".$sub_result->label."</option>\n";
 						break;
 					case 'radiobutton':
-						echo "<input type='radio' name='form-".$result->id."' id='form-".$result->id."-".$sub_result->id."' value='".$sub_result->id."'><label for='form-".$result->id."-".$sub_result->id."'  style='text-indent:50px; padding-left: -50px;' >&nbsp;&nbsp;&nbsp;".$sub_result->label."</label><BR>\n";
+						echo "<input style='vertical-align:top' type='radio' name='form-".$result->id."' id='form-".$result->id."-".$sub_result->id."' value='".$sub_result->id."'><label for='form-".$result->id."-".$sub_result->id."'  style='margin-left: 5px; display:inline-block; width:510px; margin-top:5px'>".$sub_result->label."</label><BR>\n";
 						break;
 					case 'radiobutton_sdw':
 						echo "<span style='white-space:nowrap;'><input type='radio' name='form-".$result->id."' id='form-".$result->id."-".$sub_result->id."' value='".$sub_result->id."'><label for='form-".$result->id."-".$sub_result->id."'>".$sub_result->label."</label></span>\n";
@@ -272,7 +285,7 @@ include('functions/js_functions.php');
 			$sql = "SELECT * FROM `allowance_question` WHERE role & (1 << ".$role.") ORDER BY  `order` ASC";
 			$results = $wpdb->get_results($sql);
 			foreach ($results as $result){
-				echo " printV(".$result->id.", Math.min(".$result->max_points.",";
+				echo " printV('".$result->label."', Math.min(".$result->max_points.",";
 				switch($result->type){
 				case 'dropdown':
 					echo  "POINTS[parseInt(document.getElementById('form-".$result->id."').value)])) +";
@@ -761,6 +774,7 @@ include('functions/js_functions.php');
 				}
 				
 				function calculatePoints(role){
+					document.getElementById('debug').innerHTML = "";
 					switch(role){
 					case FIELD_INDIVIDUAL:
 						return <?php getPointsEquation($allowance_constant['fieldIndividual']) ?>
@@ -780,6 +794,9 @@ include('functions/js_functions.php');
 				
 				function printV(who, v){
 					console.log("%" + who + "%" + v);
+					<?php if(isAdmin()) { ?>
+					document.getElementById('debug').innerHTML += who + " " + v + "<BR>";
+					<?php } ?>
 					return v;
 				}
 				
@@ -910,7 +927,9 @@ include('functions/js_functions.php');
 				<?php } ?>
 				<option value="2">Calculate for anyone</option>
 				<input type='radio' name='whichWay' id='show_anyone' value='2'><label for='show_anyone'>Calculate for anyone</label>
-				<div id='user_name'></div>
+				<BR>
+				<BR>
+				<div style='font-size:125%' id='user_name'></div>
 				<div id='section_enterAll' style=' /* display:none; */'>
 					<div id='choose_role_div'><select id="choose_role" onchange='select_role();'>
 					<?php
@@ -954,6 +973,10 @@ include('functions/js_functions.php');
 				</div>
 			</div>
 			<div id='section_result' style='display:none;'>
+				<?php if(isAdmin()){ ?>
+					<div id='debug'>
+					</div>
+				<?php } ?>
 				<table>
 					<tr>
 						<td></td>
