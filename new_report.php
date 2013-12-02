@@ -29,15 +29,22 @@ $user_id = $current_user->user_login;
 require('financialreports/rs_functions.php');
 
 $reports = array(
+<<<<<<< HEAD
 	
 	array ('name' => '','display_name' => '--DONATION REPORTS--'),
 	
+=======
+>>>>>>> f7f1f1ffddd135abdfefecd609bc1c803f02a438
 	array (
 		'name' => 'DonorReport',
 		'display_name' => 'Monthly Donation Report',
 		'path' => '/Donors/MonthlyDonationReport',
 		'server' => null,
+<<<<<<< HEAD
 		'comment' => '',
+=======
+		'comment' => 'description',
+>>>>>>> f7f1f1ffddd135abdfefecd609bc1c803f02a438
 		'param' => array (
 				'StartDate' => '#datestart',
 				'EndDate' => '#dateend',
@@ -50,7 +57,11 @@ $reports = array(
 		'display_name' => '13 Month Donor Report',
 		'path' => '/Donors/13MonthDonorReport',
 		'server' => null,
+<<<<<<< HEAD
 		'comment' => '',
+=======
+		'comment' => 'description',
+>>>>>>> f7f1f1ffddd135abdfefecd609bc1c803f02a438
 		'param' => array (
 				'SelectMonthYear' => '#monthyear',
 				'ProjectCode' => '#staffaccount'
@@ -62,7 +73,11 @@ $reports = array(
 		'display_name' => 'Recurring Monthly Donors',
 		'path' => '/Donors/ProjectMonthlyDonorst',
 		'server' => null,
+<<<<<<< HEAD
 		'comment' => '',
+=======
+		'comment' => 'description',
+>>>>>>> f7f1f1ffddd135abdfefecd609bc1c803f02a438
 		'param' => array (
 				'ReportLevel1' => '',
 				'ProjectCode' => '#staffaccount'
@@ -71,6 +86,7 @@ $reports = array(
 	),
 	
 	array (
+<<<<<<< HEAD
 		'name' => 'AccountDonors',
 		'display_name' => 'Account Donors',
 		'path' => '/Donors/AccountDonors',
@@ -86,11 +102,17 @@ $reports = array(
 	array ('name' => '','display_name' => '--FINANCIAL REPORTS--'),
 	
 	array (
+=======
+>>>>>>> f7f1f1ffddd135abdfefecd609bc1c803f02a438
 		'name' => 'DetailedRangeReport',
 		'display_name' => 'Detailed Income and Expense',
 		'path' => '/Financial/Detailed Income and Expense',
 		'server' => null,
+<<<<<<< HEAD
 		'comment' => '',
+=======
+		'comment' => 'description',
+>>>>>>> f7f1f1ffddd135abdfefecd609bc1c803f02a438
 		'param' => array (
 				'StartDate' => '#datestart',
 				'EndDate' => '#dateend',
@@ -103,7 +125,11 @@ $reports = array(
 		'display_name' => 'Summary Income and Expense',
 		'path' => '/Financial/Summary Income and Expense',
 		'server' => $SERVER_SQL2012,
+<<<<<<< HEAD
 		'comment' => '',
+=======
+		'comment' => 'description',
+>>>>>>> f7f1f1ffddd135abdfefecd609bc1c803f02a438
 		'param' => array (
 				'StartDate' => '#datestart',
 				'EndDate' => '#dateend',
@@ -114,13 +140,32 @@ $reports = array(
 	array (
 		'name' => 'AccountBalance',
 		'display_name' => 'Account Balance',
+<<<<<<< HEAD
 		'comment' => '',
+=======
+		'comment' => 'description',
+>>>>>>> f7f1f1ffddd135abdfefecd609bc1c803f02a438
 		'param' => array (
 				'ProjectCode' => '#staffaccount'
 				)
 	),
 	
+<<<<<<< HEAD
 	array ('name' => '','display_name' => '--STAFF REPORTS--'),
+=======
+	array (
+		'name' => 'AccountDonors',
+		'display_name' => 'Account Donors',
+		'path' => '/Donors/AccountDonors',
+		'server' => null,
+		'comment' => 'description',
+		'param' => array (
+				'StartDate' => '#datestart',
+				'EndDate' => '#dateend',
+				'ProjectCode' => '#staffaccount'
+				)
+	),
+>>>>>>> f7f1f1ffddd135abdfefecd609bc1c803f02a438
 	
 	array (
 		'name' => 'StaffList',
@@ -139,7 +184,11 @@ $reports = array(
 		'display_name' => 'Staff Vacation and Wellness',
 		'path' => '/General/Staff Vacation and Wellness',
 		'server' => $SERVER_SQL2012,
+<<<<<<< HEAD
 		'comment' => '',
+=======
+		'comment' => 'description',
+>>>>>>> f7f1f1ffddd135abdfefecd609bc1c803f02a438
 		'param' => array (
 				'ReportToMeOnly' => '#reportToMe_opt',
 				'Year' => '#year_options',
@@ -240,6 +289,10 @@ get_header(); ?>
 				<div>
 					<P>Choose Your Report:<BR>
 					<select ID="repchoice" NAME="REPORT" onChange="showReport();">
+<<<<<<< HEAD
+=======
+						  <option value="">--Report Type--</option>
+>>>>>>> f7f1f1ffddd135abdfefecd609bc1c803f02a438
 						  <?php foreach ($reports as $r){
 							echo "<option value='$r[name]'>$r[display_name]</option>\n";
 						  }
@@ -410,11 +463,14 @@ get_header(); ?>
 			var reports = <?php 
 			echo " new Array ( \n";
 			foreach ($reports as $r){
+<<<<<<< HEAD
 			
 				//skipping the labels;
 				if ($r['name'] == ""){
 					continue;
 				}
+=======
+>>>>>>> f7f1f1ffddd135abdfefecd609bc1c803f02a438
 				echo "{ name :'$r[name]', \n";
 				echo "comment: '$r[comment]', \n";
 				echo "param  : new Array (\n";
@@ -473,7 +529,10 @@ get_header(); ?>
 				var r = document.getElementById('repchoice').value;
 				$(".var").hide();
 				
+<<<<<<< HEAD
 				selected_report = null;
+=======
+>>>>>>> f7f1f1ffddd135abdfefecd609bc1c803f02a438
 				for (var i = 0; i < reports.length; i ++){
 					if(reports[i] == null){
 						continue;
@@ -484,11 +543,14 @@ get_header(); ?>
 					}
 				}
 				
+<<<<<<< HEAD
 				if (selected_report == null){
 					document.getElementById('comment').innerHTML = "<p></p>";
 					return;
 				}
 				
+=======
+>>>>>>> f7f1f1ffddd135abdfefecd609bc1c803f02a438
 				document.getElementById('comment').innerHTML = "<p>" + selected_report.comment + "</p>";
 				
 				if (r == 'AccountBalance'){
