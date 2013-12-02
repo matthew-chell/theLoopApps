@@ -1,5 +1,4 @@
 
-
 <?php
 /**
 * MyProfile
@@ -28,14 +27,14 @@ $max_file_size = 30000000; // size in bytes
 // now echo the html page 
 echo "<p />";
 ?>
-<!-- html lang="en"> 
+<html lang="en"> 
     <head> 
         <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">      
         <link rel="stylesheet" type="text/css" href="stylesheet.css">          
         <link rel=StyleSheet href="style.css" type="text/css">
 	      
     </head>     
-    <body -->     
+    <body>     
 	
 <?php
 	//
@@ -58,176 +57,9 @@ echo "<p />";
 		<div id="main-content">
 			<p class='orange-box'><?php	echo strtoupper ("$user->first_name $user->last_name")." | $user->role_title, $user->ministry"; ?></p> <p></p>
 			<div style='float:left'>
-				<?php if(is_null($user->photo)){ //if we don't have a photo or aren't allowed to show it
-				echo '<img style="display:block" src="../../wp-content/uploads/staff_photos/anonymous.jpg" width=220 />';
-				}
-				else { //we have a photo and can share it
-					echo '<img style="display:block" src="../wp-content/uploads/staff_photos/' . $user->photo . '"  width=220 />';
-				} ?>
-				
-				<input type='button' value='CHANGE IMAGE'  onClick="$('#picUpload').toggle('slow');">
-				<!-- are you sure todo -->
-				
-				<form id="Upload" action="../staff-directory/?page=upload_processor" enctype="multipart/form-data" method="post">	
-						<p />
-						<div id="picUpload" style="display:none; background:lightgrey; width:220px">
-							<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $max_file_size ?>"> 
-							<input id="file" type="file" name="file" onchange="$('#submitpic').removeAttr('disabled')"><BR>
-							<input id="submitpic" type="submit" name="submit" disabled="disabled" value="Upload Now">       
-						</div>
-					</form>
-				
-			</div>
 			
-			<div style='float:left;padding-left:23px;width:407px'>
-				<BR>
-				<h4>MINISTRY INFORMATION</h4>
-				<form action="" method="post" enctype="multitype/form-data">
-				Address: 
-					<input type="hidden" name="ministryAddress">
-					<input type='text' name="ministry_address1" placeholder='Address / Street'  value='<?php echo $user->ministry_address_line1 ?>'><BR>
-					
-					<!-- may not need these -->
-					<input type="hidden" name="ministry_address2" value="<?php echo $user->ministry_address_line2 ?>">
-					<input type="hidden" name="ministry_address3" value="<?php echo $user->ministry_address_line3 ?>"> 
-					
-					<input type="text" name="ministry_city_value" placeholder='City' value="<?php echo $user->ministry_city ?>"> <br/>
-					<input type="text" name="ministry_province_value" placeholder='Pr.' value="<?php echo $user->ministry_province ?>" maxlength="2"> <br/>
-					<input type="text" name="ministry_country" placeholder='Country' value="<?php echo $user->ministry_country ?>" maxlength="2"><BR>
-					<input type="text" name="ministry_postal_code" placeholder='PC' value="<?php echo $user->ministry_postal_code ?>"><br/>
-				Office Phone:
-					<input type="hidden" id='phone_return' name='new_phone_number'>
-					<input type="hidden" name="phonetype" value='BUS'><BR>
-					<?php require("countrycodes.php"); ?><BR>
-					
-					(<input type="text" name="phonearea" id="phonearea" maxlength="3" size="3" />)
-					 <input type="text" name="phonenumber1" id="phonenumber1" maxlength="3" size = "3" />
-					 -<input type="text" name="phonenumber2" id="phonenumber2" maxlength="4" size = "4" />
-					 <input type="text" name="phoneextension" id="phoneextension" maxlength="10" size = "5" />
-					
-					
-					
-					<?php
-					$phones	 = $wpdb-> get_results("SELECT * FROM phone_number WHERE employee_id = '" . $user->external_id . "' AND phone_type = 'BUS' ORDER BY is_ministry DESC, share_phone DESC");
-					if($phones){
-						foreach($phones as $phone){
-							$id = $phone->phone_number_id;
-							$contact = split("-", $phone->contact_number, 2);
-							?>
-							<script type="text/javascript">
-								 $( document ).ready(function() {
-									var e = document.getElementById('phone_return');
-									e.name = 'editPhone';
-									e.value =  '<?php echo $id; ?>';
-									
-									e = document.getElementById('phonecountry')
-									e.value = '<?php echo $phone->country_code ?>';
-									
-									e = document.getElementById('phonearea')
-									e.value = '<?php echo $phone->area_code ?>';
-									
-									e = document.getElementById('phonenumber1')
-									e.value = '<?php echo $contact[0] ?>';
-									
-									e = document.getElementById('phonenumber2')
-									e.value = '<?php echo $contact[1] ?>';
-									
-									e = document.getElementById('phoneextension')
-									e.value = '<?php echo $phone->extension ?>';
-								 });
-							</script>
-							<?php
-							break;
-						}
-					}
-					?>
-					<BR>
-				Ministry Email:
-					<?php
-					$emails	 = $wpdb-> get_results("SELECT * FROM email_address WHERE employee_id = '" . $user->external_id . "' AND email_type = 'BUS' ORDER BY is_ministry DESC");
-					if($emails){
-						foreach($emails as $email){
-							// email address not editable ?>
-							
-							 <input type="text" value='<?php echo $email->email_address; ?>' disabled />
-							<?php
-							break;
-						}
-					}
-					?>
-					
-					<BR>
-					<BR>
-				<h4>PERSONAL INFORMATION</h4>
-				Address: 
-					<input type="hidden" name="personalAddress">
-					<input type='text' name="address1" placeholder='Address / Street'  value='<?php echo $user->address_line1 ?>'><BR>
-					
-					<!-- may not need these -->
-					<input type="hidden" name="address2" value="<?php echo $user->address_line2 ?>">
-					<input type="hidden" name="address3" value="<?php echo $user->address_line3 ?>"> 
-					
-					<input type="text" name="city_value" placeholder='City' value="<?php echo $user->city ?>"> <br/>
-					<input type="text" name="province_value" placeholder='Pr.' value="<?php echo $user->province ?>" maxlength="2"> <br/>
-					<input type="text" name="country" placeholder='Country' value="<?php echo $user->country ?>" maxlength="2"><BR>
-					<input type="text" name="postal_code" placeholder='PC' value="<?php echo $user->postal_code ?>"><br/>
-
-
-			Cell Phone:
-					<input type="hidden" name="cell_phonetype" value='CELL'><BR>
-					<?php require("countrycodes.php"); ?><BR>
-					
-					(<input type="text" name="cell_phonearea" id="cell_phonearea" maxlength="3" size="3" />)
-					 <input type="text" name="cell_phonenumber1" id="cell_phonenumber1" maxlength="3" size = "3" />
-					 -<input type="text" name="cell_phonenumber2" id="cell_phonenumber2" maxlength="4" size = "4" />
-					 <input type="text" name="cell_phoneextension" id="cell_phoneextension" maxlength="10" size = "5" />
-					
-					
-					
-					<?php
-					$phones	 = $wpdb-> get_results("SELECT * FROM phone_number WHERE employee_id = '" . $user->external_id . "' AND phone_type = 'BUS' ORDER BY is_ministry DESC, share_phone DESC");
-					if($phones){
-						foreach($phones as $phone){
-							$id = $phone->phone_number_id;
-							$contact = split("-", $phone->contact_number, 2);
-							?>
-							<script type="text/javascript">
-								 $( document ).ready(function() {
-									var e = document.getElementById('phone_return');
-									e.name = 'editPhone';
-									e.value =  '<?php echo $id; ?>';
-									
-									e = document.getElementById('phonecountry')
-									e.value = '<?php echo $phone->country_code ?>';
-									
-									e = document.getElementById('phonearea')
-									e.value = '<?php echo $phone->area_code ?>';
-									
-									e = document.getElementById('phonenumber1')
-									e.value = '<?php echo $contact[0] ?>';
-									
-									e = document.getElementById('phonenumber2')
-									e.value = '<?php echo $contact[1] ?>';
-									
-									e = document.getElementById('phoneextension')
-									e.value = '<?php echo $phone->extension ?>';
-								 });
-							</script>
-							<?php
-							break;
-						}
-					}
-					?>
-
-
-
-
-
-
-
-
-
-				</form>
+			
+			
 			</div>
 		</div>
 	</div>
@@ -251,8 +83,8 @@ echo "<p />";
 		</div>
 	</div>
 </div><div style='clear:both;'></div>
-<?php if (false) { //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!?> 
-		<h4 style="float:right"><a href= "?page=search" >Return to Search</a></h4>
+		
+		<!--h4 style="float:right"><a href= "?page=search" >Return to Search</a></h4>
 		<div id="wrap" style="clear:both">
 			<div id="nameheader">
 				<h1><?php
@@ -264,7 +96,7 @@ echo "<p />";
 				<?php
 				if(is_null($user->photo) || $user->share_photo == 0){ //if we don't have a photo or aren't allowed to show it
 				?>
-					<img src="../wp-content/uploads/staff_photos/anonymous.jpg" width=200 />
+					<img src="../wp-content/uploads/staff_photos/anonymous.jpg" width=280 />
 					<form id="Upload" action="../staff-directory/?page=upload_processor" enctype="multipart/form-data" method="post">	
 						<input type="button" name="addPic" value="Add a Profile Picture" style="width:200px; margin-left:50px" onClick="$('#picUpload').toggle('slow');"/>
 						<p />
@@ -276,7 +108,7 @@ echo "<p />";
 					</form>
 				<?php
 				} else { //we have a photo and can share it
-					echo	 '<img src="../wp-content/uploads/staff_photos/' . $user->photo . '"  width=220 />';
+					echo	 '<img src="../wp-content/uploads/staff_photos/' . $user->photo . '"  width=290 />';
 					echo	 '<form onsubmit="return confirm(\'Are you sure you want to remove your photo?\')" action="" method="post">';
 					echo	 '	<input style="width:200px; margin-left:50px" type="submit" name="remove" value="Remove Photo" />';
 					echo	 '</form>';
@@ -287,18 +119,18 @@ echo "<p />";
 					echo str_replace("\\", "", $user->notes); //this displays the 'About me' section located beneath the profile pic
 				echo '</div>';
 				?>
-			</div><!--left-->
+			</div><!--left-- >
 			<div class="right">
 				<?php include "infocard.php"; ?>
 				<div style="background:transparent; clear:both">
 					<input type="button" name="updateButton" value="Update/Edit your information" style="width:300px; float:right; margin-right:150px;  margin-top:20px" onClick="$('#update').toggle('slow');"/>
 				</div>	
-			</div><!--right-->
+			</div><!--right-- >
 
-			<!-- UPDATE SECTION STARTS HERE -->
+			<!-- UPDATE SECTION STARTS HERE -- >
 			<div id="update" class="update right"  <?php if (empty($_POST)) { echo 'style="display:none"'; } ?>>
 			
-			<!-- PHONE NUMBERS -->
+			<!-- PHONE NUMBERS -- >
 			<div id="phone">
 				<hr>
 				<table><tr><th>Phone Numbers:</th></tr></table>
@@ -383,7 +215,7 @@ echo "<p />";
 				</div>
 			</div>
 			<hr/>
-			<!-- MINSISTRY INFORMATION -->
+			<!-- MINSISTRY INFORMATION -- >
 			<div id="ministry">
 				<table><tr><th>Ministry Information</th></tr></table>
 				<div id="ministryAddress">
@@ -696,5 +528,5 @@ echo "<p />";
 		</script>
 	
     </body> 
-</html> <?php } ?>
+</html -->
 
